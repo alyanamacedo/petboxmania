@@ -33,6 +33,7 @@ public class SystemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UIGamepad(false);
         // Registrar o evento para identificar mudanças nos dispositivos
         InputSystem.onDeviceChange += OnDeviceChange; 
         
@@ -40,11 +41,12 @@ public class SystemManager : MonoBehaviour
         {
             if (device is Gamepad){
                 gamepadCount++;
+                UIGamepad(true);
             }
-            //Debug.Log($"Device name: {device.name}, Device layout: {device.layout}");
+            Debug.Log($"Device name: {device.name}, Device layout: {device.layout}");
             devices.Add(device);
         }
-        //Debug.Log($"Total de gamepads conectados: {gamepadCount}");
+        Debug.Log($"Total de gamepads conectados: {gamepadCount}");
     }
 
     // Update is called once per frame
@@ -64,14 +66,30 @@ public class SystemManager : MonoBehaviour
         switch (change)
         {
             case InputDeviceChange.Added:
-                gamepadCount++;
-                //Debug.Log($"Dispositivo adicionado: {device.name}");
+                if (device is Gamepad){
+                    gamepadCount++;
+                    UIGamepad(true);
+                }
+                Debug.Log($"Dispositivo adicionado: {device.name}, Device layout: {device.layout}");
                 break;
 
             case InputDeviceChange.Removed:
-                gamepadCount--;
-                //Debug.Log($"Dispositivo removido: {device.name}");
+                if (device is Gamepad){
+                    gamepadCount--;
+                    UIGamepad(false);
+                }
+                Debug.Log($"Dispositivo removido: {device.name}, Device layout: {device.layout}");
                 break;
         }
+    }
+    private void UIGamepad(bool isOn){
+        if(isOn){
+            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutKeyboard").gameObject.SetActive(false);
+            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutGamepad").gameObject.SetActive(true);
+        }else{
+            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutKeyboard").gameObject.SetActive(true);
+            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutGamepad").gameObject.SetActive(false);
+        }
+
     }
 }

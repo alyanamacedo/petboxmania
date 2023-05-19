@@ -20,23 +20,23 @@ public class Transition : MonoBehaviour
         DontDestroyOnLoad(m_canvas);
     }
 
-    public static void LoadLevel(string level, float duration, Color color)
+    public static void LoadScene(string scene, float duration, Color color)
     {
         var fade = new GameObject("Transition");
         fade.AddComponent<Transition>();
-        fade.GetComponent<Transition>().StartFade(level, duration, color);
+        fade.GetComponent<Transition>().StartFade(scene, duration, color);
         fade.transform.SetParent(m_canvas.transform, false);
         fade.transform.SetAsLastSibling();
     }
 
-    private void StartFade(string level, float duration, Color fadeColor)
+    private void StartFade(string scene, float duration, Color fadeColor)
     {
-        StartCoroutine(RunFade(level, duration, fadeColor));
+        StartCoroutine(RunFade(scene, duration, fadeColor));
     }
 
     // This coroutine performs the core work of fading out of the current scene
     // and into the new scene.
-    private IEnumerator RunFade(string level, float duration, Color fadeColor)
+    private IEnumerator RunFade(string scene, float duration, Color fadeColor)
     {
         var bgTex = new Texture2D(1, 1);
         bgTex.SetPixel(0, 0, fadeColor);
@@ -68,7 +68,8 @@ public class Transition : MonoBehaviour
         image.canvasRenderer.SetAlpha(1.0f);
         yield return new WaitForEndOfFrame();
 
-        SceneManager.LoadScene(level);
+        //SceneManager.LoadScene(scene);
+        SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
         
         time = 0.0f;
         while (time < halfDuration)
@@ -81,6 +82,6 @@ public class Transition : MonoBehaviour
         image.canvasRenderer.SetAlpha(0.0f);
         yield return new WaitForEndOfFrame();
 
-        //Destroy(m_canvas);
+        Destroy(m_canvas);
     }
 }
