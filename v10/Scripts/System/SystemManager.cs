@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class SystemManager : MonoBehaviour
 {
@@ -33,32 +34,42 @@ public class SystemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIGamepad(false);
-        // Registrar o evento para identificar mudanças nos dispositivos
-        InputSystem.onDeviceChange += OnDeviceChange; 
-        
+        InputSystem.onDeviceChange += OnDeviceChange; // Registrar o evento para identificar mudanças nos dispositivos
+    }
+    
+    private void OnDestroy()
+    {
+        InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        OnDeviceCheck();
+    }
+
+    private void OnDeviceCheck(){
+        gamepadCount = 0;
+        devices = new List<InputDevice>();
         foreach (var device in InputSystem.devices)
         {
             if (device is Gamepad){
                 gamepadCount++;
                 UIGamepad(true);
             }
-            Debug.Log($"Device name: {device.name}, Device layout: {device.layout}");
+            //Debug.Log($"Device name: {device.name}, Device layout: {device.layout}");
             devices.Add(device);
         }
-        Debug.Log($"Total de gamepads conectados: {gamepadCount}");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void OnDestroy()
-    {
-        // Remover o registro do evento ao destruir o objeto
-        InputSystem.onDeviceChange -= OnDeviceChange;
+        //Debug.Log($"Total de gamepads conectados: {gamepadCount}");
     }
 
     private void OnDeviceChange(InputDevice device, InputDeviceChange change)
@@ -70,7 +81,7 @@ public class SystemManager : MonoBehaviour
                     gamepadCount++;
                     UIGamepad(true);
                 }
-                Debug.Log($"Dispositivo adicionado: {device.name}, Device layout: {device.layout}");
+                //Debug.Log($"Dispositivo adicionado: {device.name}, Device layout: {device.layout}");
                 break;
 
             case InputDeviceChange.Removed:
@@ -78,7 +89,10 @@ public class SystemManager : MonoBehaviour
                     gamepadCount--;
                     UIGamepad(false);
                 }
-                Debug.Log($"Dispositivo removido: {device.name}, Device layout: {device.layout}");
+                //Debug.Log($"Dispositivo removido: {device.name}, Device layout: {device.layout}");
+                break;
+            case InputDeviceChange.ConfigurationChanged:
+                //Debug.Log("Device configuration changed: " + device);
                 break;
         }
     }
@@ -90,6 +104,5 @@ public class SystemManager : MonoBehaviour
             GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutKeyboard").gameObject.SetActive(true);
             GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutGamepad").gameObject.SetActive(false);
         }
-
     }
 }
