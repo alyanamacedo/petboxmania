@@ -42,13 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5064245574399804409}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b5a3825edd3c6b4facdb8981fe07a23, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e5136e6c8fdf704dad565a86401ccb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scene: <Insert scene name>
   duration: 0.5
   color: {r: 0, g: 0, b: 0, a: 1}
-  scenesName: []
 --- !u!114 &5064245574399804415
 MonoBehaviour:
   m_ObjectHideFlags: 0

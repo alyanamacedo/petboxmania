@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8472949318677152268}
   - component: {fileID: 8472949318677152269}
   m_Layer: 5
-  m_Name: GroupLayoutGamepad
+  m_Name: Gamepad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1648,7 +1648,7 @@ GameObject:
   - component: {fileID: 8472949320256291330}
   - component: {fileID: 8472949320256291331}
   m_Layer: 5
-  m_Name: GroupLayoutKeyboard
+  m_Name: Keyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
