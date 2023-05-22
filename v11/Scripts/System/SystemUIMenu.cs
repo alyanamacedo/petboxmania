@@ -14,6 +14,7 @@ public class SystemUIMenu : MonoBehaviour
     public Color color = Color.black;
 
     //variável global com os nomes das cenas
+    [HideInInspector]
     public List<string> scenesName;
 
     private void Start() {
@@ -50,5 +51,9 @@ public class SystemUIMenu : MonoBehaviour
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #endif
+    }
+
+    public void OnScrollWheel(InputValue value){
+        Debug.Log("Scroll");
     }
 }

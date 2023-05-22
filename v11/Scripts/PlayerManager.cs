@@ -55,14 +55,6 @@ public class PlayerManager : MonoBehaviour
             }
         }*/
     }
-    
-    private void OnEnable() {
-
-    }
-
-    private void OnDisable() {
-        
-    }
 
     private void Move(InputAction.CallbackContext context) 
     {
