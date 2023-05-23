@@ -20,6 +20,10 @@ public class Transition : MonoBehaviour
         DontDestroyOnLoad(m_canvas);
     }
 
+    public static void LoadScene(string scene){
+        LoadScene(scene, 0.5f, Color.black);
+    }
+
     public static void LoadScene(string scene, float duration, Color color)
     {
         var fade = new GameObject("Transition");

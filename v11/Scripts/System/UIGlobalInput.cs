@@ -1,28 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using TMPro;
 
-public class UIInput : MonoBehaviour
+public class UIGlobalInput : MonoBehaviour
 {
-    //parâmetros do GameObject para realizar a transição de cena
-    public float duration = 0.5f;
-    public Color color = Color.black;
+    private List<string> sceneNames = new List<string>();
 
-    private List<string> sceneName = new List<string>();
-
-    private GameObject keyboard, gamepad;
+    private GameObject keyboard, gamepad, gamepadNumber;
 
     private void Start() {
-        sceneName = SystemManager.instance.variable.sceneName;
-    }
-
-    public void PerformTransition(string scene)
-    {
-        Transition.LoadScene(scene, duration, color);
+        sceneNames = SystemManager.instance.variables.sceneNames; 
     }
 
     //Player Input Send Messages. Função de Sair da Cena ou do Jogo
@@ -33,12 +26,12 @@ public class UIInput : MonoBehaviour
     public void Cancel(){
         Scene currentScene = SceneManager.GetActiveScene();
         string name = currentScene.name;
-        if(name == sceneName[0]){
+        if(name == sceneNames[0]){
             QuitGame();
-        }else if(name == sceneName[1]){
-            Transition.LoadScene(sceneName[0], duration, color);
+        }else if(name == sceneNames[1]){
+            Transition.LoadScene(sceneNames[0]);
         }else{
-            Transition.LoadScene(sceneName[1], duration, color);
+            Transition.LoadScene(sceneNames[1]);
         }
     }
     public void QuitGame()
@@ -53,18 +46,15 @@ public class UIInput : MonoBehaviour
         Debug.Log("Scroll");
     }
 
-    public void GamepadUI(bool isOn){
+    //atualiza os componentes visuais da UI/HUD
+    public void GamepadUI(bool isOn, int gamepadCount){
+        Debug.Log("GAMEPAD UI");
+
         GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Device");
-
-        foreach (GameObject obj in objectsWithTag)
-        {
-            if(obj.name == "Keyboard"){
-                keyboard = obj;
-            }else if(obj.name == "Gamepad"){
-                gamepad = obj;
-            }
-        }
-
+        keyboard = objectsWithTag.FirstOrDefault(t => t.name == "Keyboard");
+        gamepad = objectsWithTag.FirstOrDefault(t => t.name == "Gamepad");
+        gamepadNumber = objectsWithTag.FirstOrDefault(t => t.name == "GamepadNumber");
+        
         if (keyboard != null && gamepad != null)
         {
             if(isOn){
@@ -76,6 +66,11 @@ public class UIInput : MonoBehaviour
             }
         }else{
             Debug.LogWarning("O objeto não foi encontrado!");
+        }
+        if (gamepadNumber != null)
+        {
+            TextMeshProUGUI textComponent = gamepadNumber.GetComponentInChildren<TextMeshProUGUI>();
+            textComponent.text = gamepadCount.ToString();
         }
     }
 }
