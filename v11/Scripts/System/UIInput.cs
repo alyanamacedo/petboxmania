@@ -14,18 +14,10 @@ public class UIInput : MonoBehaviour
 
     private List<string> sceneName = new List<string>();
 
-    public GameObject keyboard, gamepad;
+    private GameObject keyboard, gamepad;
 
     private void Start() {
         sceneName = SystemManager.instance.variable.sceneName;
-        /*
-        Variable var = FindObjectOfType<Variable>();
-        if(var != null){
-            sceneName = var.sceneName;
-        }else{
-            Debug.LogWarning("Instância Variable não encontrada!");
-        }*/
-
     }
 
     public void PerformTransition(string scene)
@@ -62,6 +54,17 @@ public class UIInput : MonoBehaviour
     }
 
     public void GamepadUI(bool isOn){
+        GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Device");
+
+        foreach (GameObject obj in objectsWithTag)
+        {
+            if(obj.name == "Keyboard"){
+                keyboard = obj;
+            }else if(obj.name == "Gamepad"){
+                gamepad = obj;
+            }
+        }
+
         if (keyboard != null && gamepad != null)
         {
             if(isOn){
@@ -71,18 +74,8 @@ public class UIInput : MonoBehaviour
                 keyboard.SetActive(true);
                 gamepad.SetActive(false);
             }
-        }
-        else
-        {
+        }else{
             Debug.LogWarning("O objeto não foi encontrado!");
         }
-        /*
-        if(isOn){
-            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutKeyboard").gameObject.SetActive(false);
-            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutGamepad").gameObject.SetActive(true);
-        }else{
-            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutKeyboard").gameObject.SetActive(true);
-            GameObject.Find("Canvas/GroupLayout/Footer/GroupLayoutGamepad").gameObject.SetActive(false);
-        }*/
     }
 }
