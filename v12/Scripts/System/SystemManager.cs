@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SystemManager : MonoBehaviour
 {
-    public static SystemManager instance; //permite que outras classes acessem uma instância dessa classe diretamente
+    public static SystemManager instance; //static permite que outras classes acessem essa instância diretamente
 
     [Header("Classes de controle")]
     [Tooltip("Nome das classes")]
@@ -27,6 +27,6 @@ public class SystemManager : MonoBehaviour
     }
 
     private void Start() {
-        variables.SceneNames(); //carrega o nome de todas as cenas na variável
+        variables.sceneNames = variables.SceneNames(); //carrega o nome de todas as cenas na variável
     }
 }
