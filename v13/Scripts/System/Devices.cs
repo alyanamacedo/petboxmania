@@ -1,43 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
-public class Devices : MonoBehaviour
+public class Devices
 {
-    // Obter os dispositivos conectados no momento da inicialização
-    private List<InputDevice> devices = new List<InputDevice>();
+    private List<InputDevice> devices = new List<InputDevice>(); // lista com os dispositivos conectados
     private int gamepadCount = 0;
-    private bool isOn = false;
+    private bool isOn = false; //gamepad conectado
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        InputSystem.onDeviceChange += OnDeviceChange; // Registrar o evento para identificar mudanças nos dispositivos
-    }
-    
-    private void OnDestroy()
-    {
-        InputSystem.onDeviceChange -= OnDeviceChange;
-    }
-
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        OnDeviceCheck();
-    }
-
-    private void OnDeviceCheck(){
+    public (bool, int) OnDeviceCheck(){
         gamepadCount = 0;
         devices = new List<InputDevice>();
         foreach (var device in InputSystem.devices)
@@ -49,11 +22,11 @@ public class Devices : MonoBehaviour
             //Debug.Log($"Device name: {device.name}, Device layout: {device.layout}");
             devices.Add(device);
         }
-        SystemManager.instance.hud.GamepadUI(isOn, gamepadCount);
+        return (isOn, gamepadCount);
         //Debug.Log($"Total de gamepads conectados: {gamepadCount}");
     }
 
-    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    public (bool, int) OnDeviceChange(InputDevice device, InputDeviceChange change)
     {
         switch (change)
         {
@@ -75,7 +48,9 @@ public class Devices : MonoBehaviour
             case InputDeviceChange.ConfigurationChanged:
                 //Debug.Log("Device configuration changed: " + device);
                 break;
+            default:
+                break;
         }
-        SystemManager.instance.hud.GamepadUI(isOn, gamepadCount);
+        return (isOn, gamepadCount);
     }
 }

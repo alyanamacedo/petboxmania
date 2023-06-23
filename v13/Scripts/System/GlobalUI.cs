@@ -1,21 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class UIGlobalInput : MonoBehaviour
+public class GlobalUI : MonoBehaviour
 {
-    private List<string> sceneNames = new List<string>();
-
     private GameObject keyboard, gamepad, gamepadNumber;
 
-    private void Start() {
-        sceneNames = SystemManager.instance.variables.sceneNames; 
+    private void OnEnable() {
+        GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Device");
+        keyboard = objectsWithTag.FirstOrDefault(t => t.name == "Keyboard");
+        gamepad = objectsWithTag.FirstOrDefault(t => t.name == "Gamepad");
+        gamepadNumber = objectsWithTag.FirstOrDefault(t => t.name == "GamepadNumber");
     }
 
     //Player Input Send Messages. Função de Sair da Cena ou do Jogo
@@ -23,17 +25,19 @@ public class UIGlobalInput : MonoBehaviour
     {
         Cancel();
     }
+
     public void Cancel(){
         Scene currentScene = SceneManager.GetActiveScene();
         string name = currentScene.name;
-        if(name == sceneNames[0]){
+        if(name == Variables.sceneNames[0]){
             QuitGame();
-        }else if(name == sceneNames[1]){
-            Transition.LoadScene(sceneNames[0]);
+        }else if(name == Variables.sceneNames[1]){
+            Transition.LoadScene(Variables.sceneNames[0]);
         }else{
-            Transition.LoadScene(sceneNames[1]);
+            Transition.LoadScene(Variables.sceneNames[1]);
         }
     }
+
     public void QuitGame()
     {
         Application.Quit();
@@ -42,19 +46,13 @@ public class UIGlobalInput : MonoBehaviour
         #endif
     }
 
-    public void OnScrollWheel(InputValue value){
+    /*public void OnScrollWheel(InputValue value){
         Debug.Log("Scroll");
-    }
+    }*/
 
     //atualiza os componentes visuais da UI/HUD
-    public void GamepadUI(bool isOn, int gamepadCount){
-        Debug.Log("GAMEPAD UI");
-
-        GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Device");
-        keyboard = objectsWithTag.FirstOrDefault(t => t.name == "Keyboard");
-        gamepad = objectsWithTag.FirstOrDefault(t => t.name == "Gamepad");
-        gamepadNumber = objectsWithTag.FirstOrDefault(t => t.name == "GamepadNumber");
-        
+    public void UpdateUI(bool isOn, int gamepadCount){
+        //Changes between Gamepad and Keyboard
         if (keyboard != null && gamepad != null)
         {
             if(isOn){
